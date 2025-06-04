@@ -1,130 +1,74 @@
 💰 Java Currency Converter
-Visão Geral
-Este projeto é um conversor de moedas simples e eficaz, desenvolvido em Java. Ele permite obter as taxas de câmbio mais recentes e realizar conversões entre diferentes moedas, conectando-se à API pública do ExchangeRate-API para garantir valores atualizados. É uma ferramenta ideal para quem busca conversões rápidas ou para entender a integração de APIs RESTful em aplicações Java.
+Este projeto é um conversor de moedas simples feito em Java. Ele se conecta a uma API online para pegar as taxas de câmbio mais recentes e permite que você faça conversões de forma rápida e fácil.
 
-✨ Como Funciona
-O coração do programa reside na sua capacidade de consumir uma API externa para obter dados em tempo real. Veja os passos principais:
+🚀 Como Rodar o Projeto
+É bem simples colocar este conversor para funcionar!
 
-Requisição da API:
+1. Pegue sua Chave da API
+Primeiro, você precisa de uma chave de API gratuita.
 
-O programa inicia construindo uma URL para a API do ExchangeRate-API, incluindo uma chave de API (necessária para autenticação e uso do serviço).
-Ele usa o HttpClient do Java para fazer uma requisição HTTP GET para essa URL.
-A resposta da API é um texto no formato JSON, que contém as taxas de câmbio.
-<!-- end list -->
-
-Java
-
-// ... (imports)
-public class Main {
-    public static void main(String[] args) throws IOException, InterruptedException {
-        // ...
-        String apiKey = "SUA_CHAVE_AQUI"; // Sua chave da API
-        String url = "https://v6.exchangerate-api.com/v6/" + apiKey + "/latest/USD"; // URL da API com base USD
-
-        HttpClient client = HttpClient.newHttpClient();
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(url))
-                .build();
-
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        // response.body() agora contém o JSON das taxas de câmbio
-        // ...
-    }
-    // ...
-}
-Parsing do JSON com Gson:
-
-A biblioteca Gson é utilizada para "traduzir" o texto JSON recebido da API em um objeto Java compreensível (DadosCambio).
-Este objeto contém um mapa (conversion_rates) onde as chaves são os códigos das moedas (ex: "BRL", "CNY") e os valores são suas respectivas taxas em relação à moeda base (USD, neste caso).
-<!-- end list -->
-
-Java
-
-// ...
-// Depois de receber a resposta da API
-Gson gson = new Gson();
-DadosCambio dados = gson.fromJson(response.body(), DadosCambio.class);
-// 'dados.conversion_rates' agora tem as taxas de câmbio
-// ...
-
-static class DadosCambio {
-    String base_code; // Por exemplo, "USD"
-    Map<String, Double> conversion_rates; // Mapa com as taxas: {"BRL": 4.90, "EUR": 0.92, ...}
-}
-Interação com o Usuário e Conversão:
-
-O programa exibe um menu de opções no console, permitindo ao usuário escolher a conversão desejada.
-Após o usuário inserir o valor, o programa acessa o mapa conversion_rates para pegar a taxa de câmbio da moeda selecionada.
-A conversão é então calculada (multiplicação para USD para outra moeda, ou divisão para outra moeda para USD) e o resultado é exibido formatado.
-<!-- end list -->
-
-Java
-
-// ...
-// Dentro do loop principal para interação com o usuário
-System.out.print("Digite o valor: ");
-double valor = scanner.nextDouble();
-
-switch (opcao) {
-    case 1: // Dólar => Yuan (China)
-        double paraYuan = valor * dados.conversion_rates.get("CNY");
-        System.out.printf("%.2f USD = %.2f Yuan Chinês\n", valor, paraYuan);
-        break;
-    case 2: // Yuan => Dólar
-        double paraUsdFromYuan = valor / dados.conversion_rates.get("CNY");
-        System.out.printf("%.2f Yuan = %.2f USD\n", valor, paraUsdFromYuan);
-        break;
-    // ... (outras opções de conversão)
-}
-// ...
-🚀 Tecnologias Utilizadas
-Java 11+: Linguagem de programação.
-java.net.http.HttpClient: Cliente HTTP nativo do Java para requisições web.
-Google Gson: Biblioteca para serialização/desserialização JSON.
-🛠️ Como Usar
-Pré-requisitos
-Certifique-se de ter o Java Development Kit (JDK) 11 ou superior instalado em sua máquina.
-
-Configuração e Execução
-Obtenha sua Chave de API:
-
-Visite o site da ExchangeRate-API.
-Crie uma conta gratuita para obter sua API Key.
-Copie o Código Fonte:
-
-Crie um arquivo chamado Main.java e cole todo o código fornecido nele.
-Insira sua Chave de API:
-
-No arquivo Main.java, localize a linha:
+Acesse o site da ExchangeRate-API.
+Crie uma conta e pegue sua chave.
+2. Configure o Código
+Copie todo o código Java que você tem e salve-o em um arquivo chamado Main.java.
+Abra o arquivo Main.java e encontre esta linha:
 Java
 
 String apiKey = "5f84bd6fdc5c126234f93711"; // Substitua esta chave pela SUA CHAVE REAL
-Substitua o valor 5f84bd6fdc5c126234f93711 pela API Key que você obteve no passo 1.
-Adicione a Dependência Gson:
+Troque "5f84bd6fdc5c126234f93711" pela chave de API que você pegou no site da ExchangeRate-API.
+3. Adicione a Biblioteca Gson
+Este projeto usa uma biblioteca chamada Gson para ler os dados da internet. Você precisa adicioná-la ao seu projeto:
 
-Maven: Adicione ao seu pom.xml:
+Se você usa Maven (recomendado para projetos maiores): Adicione este código ao seu arquivo pom.xml:
 XML
 
 <dependency>
     <groupId>com.google.code.gson</groupId>
     <artifactId>gson</artifactId>
     <version>2.10.1</version> </dependency>
-Gradle: Adicione ao seu build.gradle:
+Se você usa Gradle: Adicione este código ao seu arquivo build.gradle:
 Groovy
 
 implementation 'com.google.code.gson:gson:2.10.1' // Use a versão mais recente
-Compilação Manual: Baixe o JAR do Gson (pesquise por "gson maven repository" para encontrar o link de download direto) e inclua-o no seu classpath ao compilar e executar.
-Compile e Execute:
+Se você não usa Maven/Gradle (compilação manual):
+Baixe o arquivo .jar do Gson. Você pode pesquisar por "gson maven repository" e encontrar o link para download direto da versão mais recente.
+Guarde este arquivo .jar em uma pasta fácil de acessar.
+4. Compile e Execute!
+Agora é só rodar o programa:
 
-Via IDE (IntelliJ IDEA, Eclipse, VS Code): Importe o projeto e execute a classe Main. A IDE se encarregará das dependências.
-Via Linha de Comando:
+Usando uma IDE (como IntelliJ IDEA, Eclipse, VS Code):
+
+Abra o projeto na sua IDE.
+Geralmente, sua IDE vai cuidar das dependências automaticamente.
+Basta rodar a classe Main.
+Usando o Terminal (linha de comando):
+
+Abra seu terminal ou prompt de comando.
+Vá até a pasta onde você salvou o arquivo Main.java.
+Para compilar (se você baixou o Gson JAR):
 Bash
 
-# Compile
 javac -cp "caminho/para/gson.jar" Main.java
+(No Linux/macOS, use : em vez de ; para o classpath.)
+Para executar:
+Bash
 
-# Execute
 java -cp ".;caminho/para/gson.jar" Main
-(No Linux/macOS, use : em vez de ; para separar os itens do classpath).
-🤝 Contribuições
-Sinta-se à vontade para propor melhorias, adicionar novas moedas ou refatorar o código. Pull requests são sempre bem-vindos!
+(Novamente, no Linux/macOS, use : em vez de ;.)
+🖥️ O Que Você Verá (Exemplo de Uso)
+Ao rodar o programa, você verá um menu no terminal, algo assim:
+
+====================
+Escolha uma opção (1 a 6):
+1 - Dólar => Yuan (China)
+2 - Yuan => Dólar
+3 - Dólar => Real Brasileiro
+4 - Real => Dólar
+5 - Dólar => Euro
+6 - Euro => Dólar
+7 - Sair
+Opção:
+Digite o número da opção que você quer e pressione Enter.
+O programa vai pedir para você digitar o valor que quer converter. Digite o número e pressione Enter.
+Pronto! Ele vai mostrar o resultado da conversão.
+Você pode continuar fazendo conversões até escolher a opção 7 - Sair para finalizar o programa.
